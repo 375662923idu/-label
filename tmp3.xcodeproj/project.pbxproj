@@ -15,6 +15,10 @@
 		00E88FA61ED7E7210058B783 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00E88FA41ED7E7210058B783 /* LaunchScreen.storyboard */; };
 		00E88FB11ED7E7210058B783 /* tmp3Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E88FB01ED7E7210058B783 /* tmp3Tests.m */; };
 		00E88FBC1ED7E7210058B783 /* tmp3UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E88FBB1ED7E7210058B783 /* tmp3UITests.m */; };
+		00E88FCF1ED806000058B783 /* IDULabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E88FCC1ED806000058B783 /* IDULabel.m */; };
+		00E88FD01ED806000058B783 /* IDULabelUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E88FCE1ED806000058B783 /* IDULabelUtilities.m */; };
+		00E88FD71ED806290058B783 /* IDULabel.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E88FD61ED806290058B783 /* IDULabel.png */; };
+		00E88FD91ED80E070058B783 /* 预览图片.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E88FD81ED80E070058B783 /* 预览图片.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +55,12 @@
 		00E88FB71ED7E7210058B783 /* tmp3UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tmp3UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E88FBB1ED7E7210058B783 /* tmp3UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tmp3UITests.m; sourceTree = "<group>"; };
 		00E88FBD1ED7E7210058B783 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00E88FCB1ED806000058B783 /* IDULabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDULabel.h; sourceTree = "<group>"; };
+		00E88FCC1ED806000058B783 /* IDULabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDULabel.m; sourceTree = "<group>"; };
+		00E88FCD1ED806000058B783 /* IDULabelUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDULabelUtilities.h; sourceTree = "<group>"; };
+		00E88FCE1ED806000058B783 /* IDULabelUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDULabelUtilities.m; sourceTree = "<group>"; };
+		00E88FD61ED806290058B783 /* IDULabel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IDULabel.png; sourceTree = "<group>"; };
+		00E88FD81ED80E070058B783 /* 预览图片.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "预览图片.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,11 +111,17 @@
 		00E88F951ED7E7210058B783 /* tmp3 */ = {
 			isa = PBXGroup;
 			children = (
+				00E88FD81ED80E070058B783 /* 预览图片.png */,
+				00E88FCB1ED806000058B783 /* IDULabel.h */,
+				00E88FCC1ED806000058B783 /* IDULabel.m */,
+				00E88FCD1ED806000058B783 /* IDULabelUtilities.h */,
+				00E88FCE1ED806000058B783 /* IDULabelUtilities.m */,
 				00E88F991ED7E7210058B783 /* AppDelegate.h */,
 				00E88F9A1ED7E7210058B783 /* AppDelegate.m */,
 				00E88F9C1ED7E7210058B783 /* ViewController.h */,
 				00E88F9D1ED7E7210058B783 /* ViewController.m */,
 				00E88F9F1ED7E7210058B783 /* Main.storyboard */,
+				00E88FD61ED806290058B783 /* IDULabel.png */,
 				00E88FA21ED7E7210058B783 /* Assets.xcassets */,
 				00E88FA41ED7E7210058B783 /* LaunchScreen.storyboard */,
 				00E88FA71ED7E7210058B783 /* Info.plist */,
@@ -251,7 +267,9 @@
 			files = (
 				00E88FA61ED7E7210058B783 /* LaunchScreen.storyboard in Resources */,
 				00E88FA31ED7E7210058B783 /* Assets.xcassets in Resources */,
+				00E88FD91ED80E070058B783 /* 预览图片.png in Resources */,
 				00E88FA11ED7E7210058B783 /* Main.storyboard in Resources */,
+				00E88FD71ED806290058B783 /* IDULabel.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +295,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E88F9E1ED7E7210058B783 /* ViewController.m in Sources */,
+				00E88FD01ED806000058B783 /* IDULabelUtilities.m in Sources */,
+				00E88FCF1ED806000058B783 /* IDULabel.m in Sources */,
 				00E88F9B1ED7E7210058B783 /* AppDelegate.m in Sources */,
 				00E88F981ED7E7210058B783 /* main.m in Sources */,
 			);
