@@ -9,6 +9,7 @@
 
 #import "ViewController.h"
 #import "IDULabel.h"
+#import <Masonry.h>
 
 #define UIRGBColor(r,g,b,a) ([UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a])
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
@@ -23,26 +24,28 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 @implementation ViewController
 
+//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+//
+//  _contentRect = [self.firstLabel boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+//}
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  //   self.edgesForExtendedLayout = UIRectEdgeNone;
-  //  self.automaticallyAdjustsScrollViewInsets = NO;
-  
-  self.firstLabel= [[IDULabel alloc]initWithFrame:CGRectMake(10, 10, 300, 300)];
+//  self.firstLabel= [[IDULabel alloc]initWithFrame:CGRectMake(10, 10, 300, 300)];
+  self.firstLabel= [IDULabel new];
   self.firstLabel.numberOfLines = 0;
   [self.view addSubview:self.firstLabel];
-  
-  
+  [self.firstLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    make.left.equalTo(self.view.mas_leftMargin).offset(100);
+    make.right.equalTo(self.view.mas_rightMargin);
+    make.top.equalTo(self.view.mas_topMargin).offset(100);
+  }];
+
   NSString *str = @"aaaaaaaaaaaaaaaaaaaaaaaaaaaaa图片aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa图文1aaaaaahelloaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa图文2aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa，IDULabel";
   NSMutableAttributedString *content =  [[NSMutableAttributedString alloc]initWithString:str];
-  //  [content addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:14] range:NSMakeRange(0, str.length)];
-  
-  [self configureLabelContent:content verticalAlignment:CJVerticalAlignmentBottom];
+  [self configureLabelContent:content verticalAlignment:IDUVerticalAlignmentCenter];
   
 }
-
-
 
 - (void)configureLabelContent:(NSMutableAttributedString *)attStr verticalAlignment:(IDULabelVerticalAlignment)verticalAlignment {
   attStr = [IDULabel configureLinkAttributedString:attStr
@@ -51,15 +54,15 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
                                     linkAttributes:@{
                                                      NSForegroundColorAttributeName:[UIColor blueColor],
                                                      NSFontAttributeName:[UIFont boldSystemFontOfSize:20],
-                                                     kCJBackgroundStrokeColorAttributeName:[UIColor redColor],
-                                                     kCJBackgroundLineWidthAttributeName:@(1),
-                                                     kCJBackgroundFillColorAttributeName:[UIColor lightGrayColor]
+                                                     kIDUBackgroundStrokeColorAttributeName:[UIColor redColor],
+                                                     kIDUBackgroundLineWidthAttributeName:@(1),
+                                                     kIDUBackgroundFillColorAttributeName:[UIColor lightGrayColor]
                                                      }
                               activeLinkAttributes:@{
                                                      NSForegroundColorAttributeName:[UIColor redColor],
                                                      NSFontAttributeName:[UIFont boldSystemFontOfSize:20],
-                                                     kCJActiveBackgroundStrokeColorAttributeName:[UIColor blackColor],
-                                                     kCJActiveBackgroundFillColorAttributeName:[UIColor yellowColor]
+                                                     kIDUActiveBackgroundStrokeColorAttributeName:[UIColor blackColor],
+                                                     kIDUActiveBackgroundFillColorAttributeName:[UIColor yellowColor]
                                                      }
                                          parameter:@"参数为字符串"
                                     clickLinkBlock:^(IDULabelLinkModel *linkModel){
@@ -73,15 +76,15 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
                                     linkAttributes:@{
                                                      NSForegroundColorAttributeName:[UIColor blueColor],
                                                      NSFontAttributeName:[UIFont boldSystemFontOfSize:15],
-                                                     kCJBackgroundStrokeColorAttributeName:[UIColor orangeColor],
-                                                     kCJBackgroundLineWidthAttributeName:@(1),
-                                                     kCJBackgroundFillColorAttributeName:[UIColor lightGrayColor]
+                                                     kIDUBackgroundStrokeColorAttributeName:[UIColor orangeColor],
+                                                     kIDUBackgroundLineWidthAttributeName:@(1),
+                                                     kIDUBackgroundFillColorAttributeName:[UIColor lightGrayColor]
                                                      }
                               activeLinkAttributes:@{
                                                      NSForegroundColorAttributeName:[UIColor redColor],
                                                      NSFontAttributeName:[UIFont boldSystemFontOfSize:15],
-                                                     kCJActiveBackgroundStrokeColorAttributeName:[UIColor blackColor],
-                                                     kCJActiveBackgroundFillColorAttributeName:[UIColor yellowColor]
+                                                     kIDUActiveBackgroundStrokeColorAttributeName:[UIColor blackColor],
+                                                     kIDUActiveBackgroundFillColorAttributeName:[UIColor yellowColor]
                                                      }
                                          parameter:@"参数为字符串"
                                     clickLinkBlock:^(IDULabelLinkModel *linkModel){
@@ -99,11 +102,11 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
                                            atIndex:imageRange.location+imageRange.length
                                  verticalAlignment:verticalAlignment
                                     linkAttributes:@{
-                                                     kCJBackgroundStrokeColorAttributeName:[UIColor blueColor],
-                                                     kCJBackgroundLineWidthAttributeName:@(1),
+                                                     kIDUBackgroundStrokeColorAttributeName:[UIColor blueColor],
+                                                     kIDUBackgroundLineWidthAttributeName:@(1),
                                                      }
                               activeLinkAttributes:@{
-                                                     kCJActiveBackgroundStrokeColorAttributeName:[UIColor redColor],
+                                                     kIDUActiveBackgroundStrokeColorAttributeName:[UIColor redColor],
                                                      }
                                          parameter:@"图片参数"
                                     clickLinkBlock:^(IDULabelLinkModel *linkModel){
@@ -121,6 +124,10 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
   
   self.firstLabel.attributedText = str;
   self.firstLabel.extendsLinkTouchArea = YES;
+}
+
+- (CGSize)intrinsicContentSize {
+  return CGSizeMake(100, 100);
 }
 
 

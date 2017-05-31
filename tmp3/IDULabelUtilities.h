@@ -13,20 +13,20 @@
 
 #define IDULabelIsNull(a) ((a)==nil || (a)==NULL || (NSNull *)(a)==[NSNull null])
 
-extern NSString * const kCJImageAttributeName;
-extern NSString * const kCJImageName;
-extern NSString * const kCJImageHeight;
-extern NSString * const kCJImageWidth;
-extern NSString * const kCJImageLineVerticalAlignment;
+extern NSString * const kIDUImageAttributeName;
+extern NSString * const kIDUImageName;
+extern NSString * const kIDUImageHeight;
+extern NSString * const kIDUImageWidth;
+extern NSString * const kIDUImageLineVerticalAlignment;
 
-extern NSString * const kCJLinkAttributesName;
-extern NSString * const kCJActiveLinkAttributesName;
-extern NSString * const kCJIsLinkAttributesName;
-extern NSString * const kCJLinkRangeAttributesName;
-extern NSString * const kCJLinkParameterAttributesName;
-extern NSString * const kCJClickLinkBlockAttributesName;
-extern NSString * const kCJLongPressBlockAttributesName;
-extern NSString * const kCJLinkNeedRedrawnAttributesName;
+extern NSString * const kIDULinkAttributesName;
+extern NSString * const kIDUActiveLinkAttributesName;
+extern NSString * const kIDUIsLinkAttributesName;
+extern NSString * const kIDULinkRangeAttributesName;
+extern NSString * const kIDULinkParameterAttributesName;
+extern NSString * const kIDUClickLinkBlockAttributesName;
+extern NSString * const kIDULongPressBlockAttributesName;
+extern NSString * const kIDULinkNeedRedrawnAttributesName;
 
 
 
@@ -114,7 +114,7 @@ extern NSString * const kCJLinkNeedRedrawnAttributesName;
 /**
  响应点击以及指定区域绘制边框线辅助类
  */
-@interface CJGlyphRunStrokeItem : NSObject
+@interface IDUGlyphRunStrokeItem : NSObject
 
 @property (nonatomic, strong) UIColor *fillColor;//填充背景色
 @property (nonatomic, strong) UIColor *strokeColor;//描边边框色

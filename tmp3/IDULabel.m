@@ -9,16 +9,16 @@
 #import "IDULabel.h"
 #import "IDULabelUtilities.h"
 
-@class CJGlyphRunStrokeItem;
+@class IDUGlyphRunStrokeItem;
 
-NSString * const kCJBackgroundFillColorAttributeName         = @"kCJBackgroundFillColor";
-NSString * const kCJBackgroundStrokeColorAttributeName       = @"kCJBackgroundStrokeColor";
-NSString * const kCJBackgroundLineWidthAttributeName         = @"kCJBackgroundLineWidth";
-NSString * const kCJBackgroundLineCornerRadiusAttributeName  = @"kCJBackgroundLineCornerRadius";
-NSString * const kCJActiveBackgroundFillColorAttributeName   = @"kCJActiveBackgroundFillColor";
-NSString * const kCJActiveBackgroundStrokeColorAttributeName = @"kCJActiveBackgroundStrokeColor";
+NSString * const kIDUBackgroundFillColorAttributeName         = @"kIDUBackgroundFillColor";
+NSString * const kIDUBackgroundStrokeColorAttributeName       = @"kIDUBackgroundStrokeColor";
+NSString * const kIDUBackgroundLineWidthAttributeName         = @"kIDUBackgroundLineWidth";
+NSString * const kIDUBackgroundLineCornerRadiusAttributeName  = @"kIDUBackgroundLineCornerRadius";
+NSString * const kIDUActiveBackgroundFillColorAttributeName   = @"kIDUActiveBackgroundFillColor";
+NSString * const kIDUActiveBackgroundStrokeColorAttributeName = @"kIDUActiveBackgroundStrokeColor";
 
-static CGFloat const CJFLOAT_MAX = 100000;
+static CGFloat const IDUFLOAT_MAX = 100000;
 
 static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #if CGFLOAT_IS_DOUBLE
@@ -36,7 +36,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 #endif
 }
 
-static inline CGFloat CJFlushFactorForTextAlignment(NSTextAlignment textAlignment) {
+static inline CGFloat IDUFlushFactorForTextAlignment(NSTextAlignment textAlignment) {
     switch (textAlignment) {
         case NSTextAlignmentCenter:
             return 0.5f;
@@ -80,13 +80,13 @@ static inline NSAttributedString * NSAttributedStringByScalingFontSize(NSAttribu
 
 static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(CTFramesetterRef framesetter, NSAttributedString *attributedString, CGSize size, NSUInteger numberOfLines) {
     CFRange rangeToSize = CFRangeMake(0, (CFIndex)[attributedString length]);
-    CGSize constraints = CGSizeMake(size.width, CJFLOAT_MAX);
+    CGSize constraints = CGSizeMake(size.width, IDUFLOAT_MAX);
     
     if (numberOfLines == 1) {
-        constraints = CGSizeMake(CJFLOAT_MAX, CJFLOAT_MAX);
+        constraints = CGSizeMake(IDUFLOAT_MAX, IDUFLOAT_MAX);
     } else if (numberOfLines > 0) {
         CGMutablePathRef path = CGPathCreateMutable();
-        CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, CJFLOAT_MAX));
+        CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, IDUFLOAT_MAX));
         CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
         CFArrayRef lines = CTFrameGetLines(frame);
         
@@ -147,14 +147,14 @@ static inline BOOL isSameColor(UIColor *color1, UIColor *color2){
 /**
  当CTLine包含插入图片时，描述当前行文字在垂直方向的对齐方式
  */
-struct CJCTLineVerticalLayout {
+struct IDUCTLineVerticalLayout {
     CFIndex line;//第几行
     CGFloat maxRunHight;//当前行run的最大高度（不包括图片）
     CGFloat lineHight;//行高
     CGFloat maxImageHight;//行高
     IDULabelVerticalAlignment verticalAlignment;//对齐方式（默认底部对齐）
 };
-typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
+typedef struct IDUCTLineVerticalLayout IDUCTLineVerticalLayout;
 
 
 @interface IDULabel ()<UIGestureRecognizerDelegate>
@@ -174,10 +174,10 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     NSDictionary *_normalAttDic;
     BOOL _longPress;//判断是否长按;
     BOOL _needRedrawn;//是否需要重新计算_runStrokeItemArray以及_linkStrokeItemArray数组
-    NSArray <CJGlyphRunStrokeItem *>*_runStrokeItemArray;//所有需要重绘背景或边框线的StrokeItem数组
-    NSArray <CJGlyphRunStrokeItem *>*_linkStrokeItemArray;//可点击链点的StrokeItem数组
-    CJGlyphRunStrokeItem *_lastGlyphRunStrokeItem;//计算StrokeItem的中间变量
-    CJGlyphRunStrokeItem *_currentClickRunStrokeItem;//当前点击选中的StrokeItem
+    NSArray <IDUGlyphRunStrokeItem *>*_runStrokeItemArray;//所有需要重绘背景或边框线的StrokeItem数组
+    NSArray <IDUGlyphRunStrokeItem *>*_linkStrokeItemArray;//可点击链点的StrokeItem数组
+    IDUGlyphRunStrokeItem *_lastGlyphRunStrokeItem;//计算StrokeItem的中间变量
+    IDUGlyphRunStrokeItem *_currentClickRunStrokeItem;//当前点击选中的StrokeItem
     NSArray *_CTLineVerticalLayoutArray;//记录 包含插入图片的CTLine在垂直方向的对齐方式的数组
 }
 
@@ -209,7 +209,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
                                                  atIndex:(NSUInteger)loc
                                               attributes:(NSDictionary *)attributes
 {
-    return [self configureAttributedString:attrStr addImageName:imageName imageSize:size atIndex:loc verticalAlignment:CJVerticalAlignmentBottom attributes:attributes];
+    return [self configureAttributedString:attrStr addImageName:imageName imageSize:size atIndex:loc verticalAlignment:IDUVerticalAlignmentBottom attributes:attributes];
 }
 
 + (NSMutableAttributedString *)configureLinkAttributedString:(NSAttributedString *)attrStr
@@ -222,7 +222,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
                                               clickLinkBlock:(IDULabelLinkModelBlock)clickLinkBlock
                                               longPressBlock:(IDULabelLinkModelBlock)longPressBlock
 {
-    return [self configureLinkAttributedString:attrStr addImageName:imageName imageSize:size atIndex:loc verticalAlignment:CJVerticalAlignmentBottom linkAttributes:linkAttributes activeLinkAttributes:activeLinkAttributes parameter:parameter clickLinkBlock:clickLinkBlock longPressBlock:longPressBlock];
+    return [self configureLinkAttributedString:attrStr addImageName:imageName imageSize:size atIndex:loc verticalAlignment:IDUVerticalAlignmentBottom linkAttributes:linkAttributes activeLinkAttributes:activeLinkAttributes parameter:parameter clickLinkBlock:clickLinkBlock longPressBlock:longPressBlock];
 }
 
 + (NSMutableAttributedString *)configureAttributedString:(NSAttributedString *)attrStr
@@ -292,24 +292,24 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     
     NSMutableAttributedString *attText = [[NSMutableAttributedString alloc]initWithAttributedString:self.attributedText];
     [attText enumerateAttributesInRange:NSMakeRange(0, attText.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary<NSString *, id> *attrs, NSRange range, BOOL *stop){
-        BOOL isLink = [attrs[kCJIsLinkAttributesName] boolValue];
+        BOOL isLink = [attrs[kIDUIsLinkAttributesName] boolValue];
         if (isLink &&
             (linkRange.location >= range.location) &&
             (linkRange.location <= range.location+range.length) &&
             (linkRange.location+linkRange.length <= range.location + range.length))
         {
-            [attText removeAttribute:kCJLinkAttributesName range:linkRange];
-            [attText removeAttribute:kCJActiveLinkAttributesName range:linkRange];
-            [attText removeAttribute:kCJIsLinkAttributesName range:linkRange];
-            [attText removeAttribute:kCJLinkRangeAttributesName range:linkRange];
-            [attText removeAttribute:kCJLinkNeedRedrawnAttributesName range:linkRange];
+            [attText removeAttribute:kIDULinkAttributesName range:linkRange];
+            [attText removeAttribute:kIDUActiveLinkAttributesName range:linkRange];
+            [attText removeAttribute:kIDUIsLinkAttributesName range:linkRange];
+            [attText removeAttribute:kIDULinkRangeAttributesName range:linkRange];
+            [attText removeAttribute:kIDULinkNeedRedrawnAttributesName range:linkRange];
             
-            [attText removeAttribute:kCJBackgroundFillColorAttributeName range:linkRange];
-            [attText removeAttribute:kCJBackgroundStrokeColorAttributeName range:linkRange];
-            [attText removeAttribute:kCJBackgroundLineWidthAttributeName range:linkRange];
-            [attText removeAttribute:kCJBackgroundLineCornerRadiusAttributeName range:linkRange];
-            [attText removeAttribute:kCJActiveBackgroundFillColorAttributeName range:linkRange];
-            [attText removeAttribute:kCJActiveBackgroundStrokeColorAttributeName range:linkRange];
+            [attText removeAttribute:kIDUBackgroundFillColorAttributeName range:linkRange];
+            [attText removeAttribute:kIDUBackgroundStrokeColorAttributeName range:linkRange];
+            [attText removeAttribute:kIDUBackgroundLineWidthAttributeName range:linkRange];
+            [attText removeAttribute:kIDUBackgroundLineCornerRadiusAttributeName range:linkRange];
+            [attText removeAttribute:kIDUActiveBackgroundFillColorAttributeName range:linkRange];
+            [attText removeAttribute:kIDUActiveBackgroundStrokeColorAttributeName range:linkRange];
             
         }
     }];
@@ -334,21 +334,21 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     NSMutableAttributedString *newAttributedText = [[NSMutableAttributedString alloc]initWithAttributedString:self.attributedText];
     
     [newAttributedText enumerateAttributesInRange:NSMakeRange(0, newAttributedText.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary<NSString *, id> *attrs, NSRange range, BOOL *stop){
-        BOOL isLink = [attrs[kCJIsLinkAttributesName] boolValue];
+        BOOL isLink = [attrs[kIDUIsLinkAttributesName] boolValue];
         if (isLink)
         {
-            [newAttributedText removeAttribute:kCJLinkAttributesName range:range];
-            [newAttributedText removeAttribute:kCJActiveLinkAttributesName range:range];
-            [newAttributedText removeAttribute:kCJIsLinkAttributesName range:range];
-            [newAttributedText removeAttribute:kCJLinkRangeAttributesName range:range];
-            [newAttributedText removeAttribute:kCJLinkNeedRedrawnAttributesName range:range];
+            [newAttributedText removeAttribute:kIDULinkAttributesName range:range];
+            [newAttributedText removeAttribute:kIDUActiveLinkAttributesName range:range];
+            [newAttributedText removeAttribute:kIDUIsLinkAttributesName range:range];
+            [newAttributedText removeAttribute:kIDULinkRangeAttributesName range:range];
+            [newAttributedText removeAttribute:kIDULinkNeedRedrawnAttributesName range:range];
             
-            [newAttributedText removeAttribute:kCJBackgroundFillColorAttributeName range:range];
-            [newAttributedText removeAttribute:kCJBackgroundStrokeColorAttributeName range:range];
-            [newAttributedText removeAttribute:kCJBackgroundLineWidthAttributeName range:range];
-            [newAttributedText removeAttribute:kCJBackgroundLineCornerRadiusAttributeName range:range];
-            [newAttributedText removeAttribute:kCJActiveBackgroundFillColorAttributeName range:range];
-            [newAttributedText removeAttribute:kCJActiveBackgroundStrokeColorAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUBackgroundFillColorAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUBackgroundStrokeColorAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUBackgroundLineWidthAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUBackgroundLineCornerRadiusAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUActiveBackgroundFillColorAttributeName range:range];
+            [newAttributedText removeAttribute:kIDUActiveBackgroundStrokeColorAttributeName range:range];
             
         }
     }];
@@ -377,6 +377,13 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     }
     return self;
 }
+- (instancetype)init{
+  self = [super init];
+  if (self) {
+    [self commonInit];
+  }
+  return self;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -389,7 +396,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 - (void)commonInit {
     self.userInteractionEnabled = YES;
     self.textInsets = UIEdgeInsetsZero;
-    self.verticalAlignment = CJVerticalAlignmentCenter;
+    self.verticalAlignment = IDUVerticalAlignmentCenter;
     _numberOfLines = -1;
     _needRedrawn = YES;
     _longPress = NO;
@@ -460,18 +467,18 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     NSMutableAttributedString *attText = [[NSMutableAttributedString alloc]initWithAttributedString:text];
 
     [attText enumerateAttributesInRange:NSMakeRange(0, attText.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary<NSString *, id> *attrs, NSRange range, BOOL *stop){
-        BOOL isLink = [attrs[kCJIsLinkAttributesName] boolValue];
+        BOOL isLink = [attrs[kIDUIsLinkAttributesName] boolValue];
         if (isLink) {
-            [attText addAttribute:kCJLinkRangeAttributesName value:NSStringFromRange(range) range:range];
+            [attText addAttribute:kIDULinkRangeAttributesName value:NSStringFromRange(range) range:range];
         }else{
-            [attText removeAttribute:kCJLinkRangeAttributesName range:range];
+            [attText removeAttribute:kIDULinkRangeAttributesName range:range];
             if (!_normalAttDic &&
-                IDULabelIsNull(attrs[kCJBackgroundFillColorAttributeName]) &&
-                IDULabelIsNull(attrs[kCJBackgroundStrokeColorAttributeName]) &&
-                IDULabelIsNull(attrs[kCJBackgroundLineWidthAttributeName]) &&
-                IDULabelIsNull(attrs[kCJBackgroundLineCornerRadiusAttributeName]) &&
-                IDULabelIsNull(attrs[kCJActiveBackgroundFillColorAttributeName]) &&
-                IDULabelIsNull(attrs[kCJActiveBackgroundStrokeColorAttributeName])
+                IDULabelIsNull(attrs[kIDUBackgroundFillColorAttributeName]) &&
+                IDULabelIsNull(attrs[kIDUBackgroundStrokeColorAttributeName]) &&
+                IDULabelIsNull(attrs[kIDUBackgroundLineWidthAttributeName]) &&
+                IDULabelIsNull(attrs[kIDUBackgroundLineCornerRadiusAttributeName]) &&
+                IDULabelIsNull(attrs[kIDUActiveBackgroundFillColorAttributeName]) &&
+                IDULabelIsNull(attrs[kIDUActiveBackgroundStrokeColorAttributeName])
                               ) {
                 _normalAttDic = attrs;
             }
@@ -496,12 +503,12 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         
         [fullString enumerateAttributesInRange:NSMakeRange(0, fullString.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary<NSString *, id> *attrs, NSRange range, BOOL *stop){
             
-            NSDictionary *linkAttributes = attrs[kCJLinkAttributesName];
+            NSDictionary *linkAttributes = attrs[kIDULinkAttributesName];
             if (!IDULabelIsNull(linkAttributes)) {
                 [fullString addAttributes:linkAttributes range:range];
             }
             
-            NSDictionary *activeLinkAttributes = attrs[kCJActiveLinkAttributesName];
+            NSDictionary *activeLinkAttributes = attrs[kIDUActiveLinkAttributesName];
             if (!IDULabelIsNull(activeLinkAttributes)) {
                 //设置当前点击链点的activeLinkAttributes属性
                 if (_currentClickRunStrokeItem && NSEqualRanges(_currentClickRunStrokeItem.range,range)) {
@@ -627,13 +634,13 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     if (textSize.height < bounds.size.height) {
          _yOffset = 0.0f;
         switch (self.verticalAlignment) {
-            case CJVerticalAlignmentCenter:
+            case IDUVerticalAlignmentCenter:
                 _yOffset = CGFloat_floor((bounds.size.height - textSize.height) / 2.0f);
                 break;
-            case CJVerticalAlignmentBottom:
+            case IDUVerticalAlignmentBottom:
                 _yOffset = bounds.size.height - textSize.height;
                 break;
-            case CJVerticalAlignmentTop:
+            case IDUVerticalAlignmentTop:
             default:
                 break;
         }
@@ -662,7 +669,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         }
         
         //设置最大size
-        CGSize maxSize = (self.numberOfLines > 1) ? CGSizeMake(CJFLOAT_MAX, CJFLOAT_MAX) : CGSizeZero;
+        CGSize maxSize = (self.numberOfLines > 1) ? CGSizeMake(IDUFLOAT_MAX, IDUFLOAT_MAX) : CGSizeZero;
         
         CGFloat textWidth = [self sizeThatFits:maxSize].width;
         CGFloat availableWidth = self.frame.size.width * self.numberOfLines;
@@ -781,7 +788,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 //        CTLineGetTypographicBounds((CTLineRef)line, &ascent, &descent, &leading);
         
         // 根据水平对齐方式调整偏移量
-        CGFloat flushFactor = CJFlushFactorForTextAlignment(self.textAlignment);
+        CGFloat flushFactor = IDUFlushFactorForTextAlignment(self.textAlignment);
         
         if (lineIndex == _numberOfLines - 1 && truncateLastLine) {
             // 判断最后一行是否占满整行
@@ -874,7 +881,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     CGPathRelease(path);
 }
 
-- (CGFloat)yOffset:(CGFloat)y lineVerticalLayout:(CJCTLineVerticalLayout)lineVerticalLayout lineDescent:(CGFloat)lineDescent isImage:(BOOL)isImage imageHight:(CGFloat)imageHight imageVerticalAlignment:(IDULabelVerticalAlignment)imageVerticalAlignment {
+- (CGFloat)yOffset:(CGFloat)y lineVerticalLayout:(IDUCTLineVerticalLayout)lineVerticalLayout lineDescent:(CGFloat)lineDescent isImage:(BOOL)isImage imageHight:(CGFloat)imageHight imageVerticalAlignment:(IDULabelVerticalAlignment)imageVerticalAlignment {
     CGFloat lineHight = lineVerticalLayout.lineHight;
     CGFloat maxRunHight = lineVerticalLayout.maxRunHight;
     CGFloat maxImageHight = lineVerticalLayout.maxImageHight;
@@ -885,7 +892,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     }
     
     CGFloat yy = y;
-    if (verticalAlignment == CJVerticalAlignmentBottom) {
+    if (verticalAlignment == IDUVerticalAlignmentBottom) {
         if (isImage) {
             yy = y - lineDescent - self.font.descender;
             if (imageHight >= maxRunHight && imageHight >= maxImageHight) {
@@ -893,7 +900,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             }
         }
     }
-    else if (verticalAlignment == CJVerticalAlignmentCenter) {
+    else if (verticalAlignment == IDUVerticalAlignmentCenter) {
         if (isImage) {
             yy = y - lineDescent + (lineHight-imageHight)/2.0;
         }else{
@@ -902,7 +909,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             }
         }
     }
-    else if (verticalAlignment == CJVerticalAlignmentTop) {
+    else if (verticalAlignment == IDUVerticalAlignmentTop) {
         if (isImage) {
             yy = y - lineDescent + (lineHight-imageHight) + self.font.descender;
             if (imageHight >= maxRunHight && imageHight >= maxImageHight) {
@@ -919,7 +926,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 
 - (void)drawCTRun:(CGContextRef)c line:(CTLineRef)line x:(CGFloat)x y:(CGFloat)y lineIndex:(CFIndex)lineIndex lineOrigin:(CGPoint)lineOrigin inRect:(CGRect)rect {
     
-    CJCTLineVerticalLayout lineVerticalLayout = {0,0,0};
+    IDUCTLineVerticalLayout lineVerticalLayout = {0,0,0};
     CGFloat lineAscent = 0.0f, lineDescent = 0.0f, lineLeading = 0.0f;
     CTLineGetTypographicBounds(line, &lineAscent, &lineDescent, &lineLeading);
     
@@ -928,7 +935,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     lineVerticalLayout.lineHight = lineAscent + lineDescent + lineLeading;
     
     for (NSValue *value in _CTLineVerticalLayoutArray) {
-        CJCTLineVerticalLayout themLineVerticalLayout;
+        IDUCTLineVerticalLayout themLineVerticalLayout;
         [value getValue:&themLineVerticalLayout];
         if (themLineVerticalLayout.line == lineIndex) {
             lineVerticalLayout = themLineVerticalLayout;
@@ -940,7 +947,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     for (CFIndex j = 0; j < CFArrayGetCount(runs); ++j) {
         CTRunRef run = CFArrayGetValueAtIndex(runs, j);
         NSDictionary *attributes = (__bridge NSDictionary *)CTRunGetAttributes(run);
-        NSDictionary *imgInfoDic = attributes[kCJImageAttributeName];
+        NSDictionary *imgInfoDic = attributes[kIDUImageAttributeName];
         
         CGRect runRect;
         CGFloat runAscent = 0, runDescent = 0;
@@ -949,19 +956,19 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         
         BOOL isImage = YES;
         CGFloat imageHight = 0;
-        IDULabelVerticalAlignment imageVerticalAlignment = CJVerticalAlignmentBottom;
+        IDULabelVerticalAlignment imageVerticalAlignment = IDUVerticalAlignmentBottom;
         if (IDULabelIsNull(imgInfoDic)) {
             isImage = NO;
         }else{
             imageHight = runAscent + runDescent;
-            imageVerticalAlignment = [imgInfoDic[kCJImageLineVerticalAlignment] integerValue];
+            imageVerticalAlignment = [imgInfoDic[kIDUImageLineVerticalAlignment] integerValue];
         }
         
         CGFloat yy = [self yOffset:y lineVerticalLayout:lineVerticalLayout lineDescent:lineDescent isImage:isImage imageHight:imageHight imageVerticalAlignment:imageVerticalAlignment];
         
         //绘制图片
-        if (imgInfoDic[kCJImageName]) {
-            UIImage *image = [UIImage imageNamed:imgInfoDic[kCJImageName]];
+        if (imgInfoDic[kIDUImageName]) {
+            UIImage *image = [UIImage imageNamed:imgInfoDic[kIDUImageName]];
             if (image) {
                 runRect = CGRectMake(lineOrigin.x + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, NULL), lineOrigin.y - runDescent, runRect.size.width, runAscent + runDescent);
                 CGRect imageDrawRect;
@@ -982,11 +989,11 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 }
 
 - (void)drawBackgroundColor:(CGContextRef)c
-             runStrokeItems:(NSArray <CJGlyphRunStrokeItem *>*)runStrokeItems
+             runStrokeItems:(NSArray <IDUGlyphRunStrokeItem *>*)runStrokeItems
               isStrokeColor:(BOOL)isStrokeColor
 {
     if (runStrokeItems.count > 0) {
-        for (CJGlyphRunStrokeItem *item in runStrokeItems) {
+        for (IDUGlyphRunStrokeItem *item in runStrokeItems) {
             if (_currentClickRunStrokeItem && NSEqualRanges(_currentClickRunStrokeItem.range,item.range)) {
                 [self drawBackgroundColor:c runStrokeItem:item isStrokeColor:isStrokeColor active:YES];
             }
@@ -998,7 +1005,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 }
 
 - (void)drawBackgroundColor:(CGContextRef)c
-              runStrokeItem:(CJGlyphRunStrokeItem *)runStrokeItem
+              runStrokeItem:(IDUGlyphRunStrokeItem *)runStrokeItem
               isStrokeColor:(BOOL)isStrokeColor
                      active:(BOOL)active
 {
@@ -1043,7 +1050,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         //行高
         CGFloat lineHeight = ascent + descent + leading;
         //默认底部对齐
-        IDULabelVerticalAlignment verticalAlignment = CJVerticalAlignmentBottom;
+        IDULabelVerticalAlignment verticalAlignment = IDUVerticalAlignmentBottom;
         
         CFArrayRef runs = CTLineGetGlyphRuns(line);
         CGFloat maxRunHight = 0;
@@ -1053,34 +1060,34 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             CGFloat runAscent = 0.0f, runDescent = 0.0f, runLeading = 0.0f;
             CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &runAscent, &runDescent, &runLeading);
             NSDictionary *attDic = (__bridge NSDictionary *)CTRunGetAttributes(run);
-            NSDictionary *imgInfoDic = attDic[kCJImageAttributeName];
+            NSDictionary *imgInfoDic = attDic[kIDUImageAttributeName];
             if (IDULabelIsNull(imgInfoDic)) {
                 maxRunHight = MAX(maxRunHight, runAscent + runDescent + runLeading);
             }else{
                 if (maxImageHight < runAscent + runDescent) {
                     maxImageHight = runAscent + runDescent;
-                    verticalAlignment = [imgInfoDic[kCJImageLineVerticalAlignment] integerValue];
+                    verticalAlignment = [imgInfoDic[kIDUImageLineVerticalAlignment] integerValue];
                 }
             }
         }
-        CJCTLineVerticalLayout lineVerticalLayout;
+        IDUCTLineVerticalLayout lineVerticalLayout;
         lineVerticalLayout.line = i;
         lineVerticalLayout.lineHight = lineHeight;
         lineVerticalLayout.maxRunHight = maxRunHight;
         lineVerticalLayout.verticalAlignment = verticalAlignment;
         lineVerticalLayout.maxImageHight = maxImageHight;
         
-        NSValue *value = [NSValue valueWithBytes:&lineVerticalLayout objCType:@encode(CJCTLineVerticalLayout)];
+        NSValue *value = [NSValue valueWithBytes:&lineVerticalLayout objCType:@encode(IDUCTLineVerticalLayout)];
         [verticalLayoutArray addObject:value];
     }
     return verticalLayoutArray;
 }
 
 // 计算可点击链点，以及需要填充背景或边框线的run数组
-- (NSArray <CJGlyphRunStrokeItem *>*)calculateRunStrokeItemsFrame:(NSArray *)lines origins:(CGPoint[])origins inRect:(CGRect)rect {
+- (NSArray <IDUGlyphRunStrokeItem *>*)calculateRunStrokeItemsFrame:(NSArray *)lines origins:(CGPoint[])origins inRect:(CGRect)rect {
     NSMutableArray *allStrokePathItems = [NSMutableArray arrayWithCapacity:3];
     
-    CJCTLineVerticalLayout lineVerticalLayout = {0,0,0};
+    IDUCTLineVerticalLayout lineVerticalLayout = {0,0,0};
     // 遍历所有行
     for (NSInteger i = 0; i < _numberOfLines; i ++ ) {
         id line = lines[i];
@@ -1095,7 +1102,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         lineVerticalLayout.lineHight = ascentAndDescent + leading;
         
         for (NSValue *value in _CTLineVerticalLayoutArray) {
-            CJCTLineVerticalLayout themLineVerticalLayout;
+            IDUCTLineVerticalLayout themLineVerticalLayout;
             [value getValue:&themLineVerticalLayout];
             if (themLineVerticalLayout.line == i) {
                 lineVerticalLayout = themLineVerticalLayout;
@@ -1111,58 +1118,58 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             
             NSDictionary *attributes = (__bridge NSDictionary *)CTRunGetAttributes((__bridge CTRunRef) glyphRun);
             
-            UIColor *strokeColor = colorWithAttributeName(attributes, kCJBackgroundStrokeColorAttributeName);
-            if (!IDULabelIsNull(attributes[kCJLinkAttributesName]) && !isNotClearColor(strokeColor)) {
-                strokeColor = colorWithAttributeName(attributes[kCJLinkAttributesName], kCJBackgroundStrokeColorAttributeName);
+            UIColor *strokeColor = colorWithAttributeName(attributes, kIDUBackgroundStrokeColorAttributeName);
+            if (!IDULabelIsNull(attributes[kIDULinkAttributesName]) && !isNotClearColor(strokeColor)) {
+                strokeColor = colorWithAttributeName(attributes[kIDULinkAttributesName], kIDUBackgroundStrokeColorAttributeName);
             }
-            UIColor *fillColor = colorWithAttributeName(attributes, kCJBackgroundFillColorAttributeName);
-            if (!IDULabelIsNull(attributes[kCJLinkAttributesName]) && !isNotClearColor(fillColor)) {
-                fillColor = colorWithAttributeName(attributes[kCJLinkAttributesName], kCJBackgroundFillColorAttributeName);
+            UIColor *fillColor = colorWithAttributeName(attributes, kIDUBackgroundFillColorAttributeName);
+            if (!IDULabelIsNull(attributes[kIDULinkAttributesName]) && !isNotClearColor(fillColor)) {
+                fillColor = colorWithAttributeName(attributes[kIDULinkAttributesName], kIDUBackgroundFillColorAttributeName);
             }
             
-            UIColor *activeStrokeColor = colorWithAttributeName(attributes, kCJActiveBackgroundStrokeColorAttributeName);
-            if (!IDULabelIsNull(attributes[kCJActiveLinkAttributesName]) && !isNotClearColor(activeStrokeColor)) {
-                activeStrokeColor = colorWithAttributeName(attributes[kCJActiveLinkAttributesName], kCJActiveBackgroundStrokeColorAttributeName);
+            UIColor *activeStrokeColor = colorWithAttributeName(attributes, kIDUActiveBackgroundStrokeColorAttributeName);
+            if (!IDULabelIsNull(attributes[kIDUActiveLinkAttributesName]) && !isNotClearColor(activeStrokeColor)) {
+                activeStrokeColor = colorWithAttributeName(attributes[kIDUActiveLinkAttributesName], kIDUActiveBackgroundStrokeColorAttributeName);
             }
             if (strokeColor && !activeStrokeColor) {
                 activeStrokeColor = strokeColor;
             }
             
-            UIColor *activeFillColor = colorWithAttributeName(attributes, kCJActiveBackgroundFillColorAttributeName);
-            if (!IDULabelIsNull(attributes[kCJActiveLinkAttributesName]) && !isNotClearColor(activeFillColor)) {
-                activeFillColor = colorWithAttributeName(attributes[kCJActiveLinkAttributesName], kCJActiveBackgroundFillColorAttributeName);
+            UIColor *activeFillColor = colorWithAttributeName(attributes, kIDUActiveBackgroundFillColorAttributeName);
+            if (!IDULabelIsNull(attributes[kIDUActiveLinkAttributesName]) && !isNotClearColor(activeFillColor)) {
+                activeFillColor = colorWithAttributeName(attributes[kIDUActiveLinkAttributesName], kIDUActiveBackgroundFillColorAttributeName);
             }
             if (fillColor && !activeFillColor) {
                 activeFillColor = fillColor;
             }
             
-            CGFloat lineWidth = [[attributes objectForKey:kCJBackgroundLineWidthAttributeName] floatValue];
-            if (!IDULabelIsNull(attributes[kCJActiveLinkAttributesName]) && lineWidth == 0) {
-                lineWidth = [[attributes[kCJActiveLinkAttributesName] objectForKey:kCJBackgroundLineCornerRadiusAttributeName] floatValue];
+            CGFloat lineWidth = [[attributes objectForKey:kIDUBackgroundLineWidthAttributeName] floatValue];
+            if (!IDULabelIsNull(attributes[kIDUActiveLinkAttributesName]) && lineWidth == 0) {
+                lineWidth = [[attributes[kIDUActiveLinkAttributesName] objectForKey:kIDUBackgroundLineCornerRadiusAttributeName] floatValue];
             }
-            CGFloat cornerRadius = [[attributes objectForKey:kCJBackgroundLineCornerRadiusAttributeName] floatValue];
-            if (!IDULabelIsNull(attributes[kCJActiveLinkAttributesName]) && cornerRadius == 0) {
-                cornerRadius = [[attributes[kCJActiveLinkAttributesName] objectForKey:kCJBackgroundLineCornerRadiusAttributeName] floatValue];
+            CGFloat cornerRadius = [[attributes objectForKey:kIDUBackgroundLineCornerRadiusAttributeName] floatValue];
+            if (!IDULabelIsNull(attributes[kIDUActiveLinkAttributesName]) && cornerRadius == 0) {
+                cornerRadius = [[attributes[kIDUActiveLinkAttributesName] objectForKey:kIDUBackgroundLineCornerRadiusAttributeName] floatValue];
             }
             lineWidth = lineWidth == 0?1:lineWidth;
             cornerRadius = cornerRadius == 0?5:cornerRadius;
             
-            BOOL isLink = [attributes[kCJIsLinkAttributesName] boolValue];
+            BOOL isLink = [attributes[kIDUIsLinkAttributesName] boolValue];
             
             //点击链点的range（当isLink == YES才存在）
-            NSString *linkRangeStr = [attributes objectForKey:kCJLinkRangeAttributesName];
+            NSString *linkRangeStr = [attributes objectForKey:kIDULinkRangeAttributesName];
             //点击链点是否需要重绘
-            BOOL needRedrawn = [attributes[kCJLinkNeedRedrawnAttributesName] boolValue];
+            BOOL needRedrawn = [attributes[kIDULinkNeedRedrawnAttributesName] boolValue];
             
-            NSDictionary *imgInfoDic = attributes[kCJImageAttributeName];
-            IDULabelVerticalAlignment imageVerticalAlignment = CJVerticalAlignmentBottom;
+            NSDictionary *imgInfoDic = attributes[kIDUImageAttributeName];
+            IDULabelVerticalAlignment imageVerticalAlignment = IDUVerticalAlignmentBottom;
             if (!IDULabelIsNull(imgInfoDic)) {
-                imageVerticalAlignment = [imgInfoDic[kCJImageLineVerticalAlignment] integerValue];
+                imageVerticalAlignment = [imgInfoDic[kIDUImageLineVerticalAlignment] integerValue];
             }
             
             // 当前glyphRun是一个可点击链点
             if (isLink) {
-                CJGlyphRunStrokeItem *runStrokeItem = [self runStrokeItemFromGlyphRun:glyphRun
+                IDUGlyphRunStrokeItem *runStrokeItem = [self runStrokeItemFromGlyphRun:glyphRun
                                                                                  line:line
                                                                               origins:origins
                                                                             lineIndex:i
@@ -1183,25 +1190,25 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
                 runStrokeItem.isLink = YES;
                 runStrokeItem.needRedrawn = needRedrawn;
                 
-                if (imgInfoDic[kCJImageName]) {
-                    runStrokeItem.imageName = imgInfoDic[kCJImageName];
+                if (imgInfoDic[kIDUImageName]) {
+                    runStrokeItem.imageName = imgInfoDic[kIDUImageName];
                     runStrokeItem.isImage = YES;
                 }
-                if (!IDULabelIsNull(attributes[kCJLinkParameterAttributesName])) {
-                    runStrokeItem.parameter = attributes[kCJLinkParameterAttributesName];
+                if (!IDULabelIsNull(attributes[kIDULinkParameterAttributesName])) {
+                    runStrokeItem.parameter = attributes[kIDULinkParameterAttributesName];
                 }
-                if (!IDULabelIsNull(attributes[kCJClickLinkBlockAttributesName])) {
-                    runStrokeItem.linkBlock = attributes[kCJClickLinkBlockAttributesName];
+                if (!IDULabelIsNull(attributes[kIDUClickLinkBlockAttributesName])) {
+                    runStrokeItem.linkBlock = attributes[kIDUClickLinkBlockAttributesName];
                 }
-                if (!IDULabelIsNull(attributes[kCJLongPressBlockAttributesName])) {
-                    runStrokeItem.longPressBlock = attributes[kCJLongPressBlockAttributesName];
+                if (!IDULabelIsNull(attributes[kIDULongPressBlockAttributesName])) {
+                    runStrokeItem.longPressBlock = attributes[kIDULongPressBlockAttributesName];
                 }
                 
                 [strokePathItems addObject:runStrokeItem];
             }else{
                 //不是可点击链点。但存在自定义边框线或背景色
                 if (isNotClearColor(strokeColor) || isNotClearColor(fillColor) || isNotClearColor(activeStrokeColor) || isNotClearColor(activeFillColor)) {
-                    CJGlyphRunStrokeItem *runStrokeItem = [self runStrokeItemFromGlyphRun:glyphRun
+                    IDUGlyphRunStrokeItem *runStrokeItem = [self runStrokeItemFromGlyphRun:glyphRun
                                                                                      line:line
                                                                                   origins:origins
                                                                                 lineIndex:i
@@ -1219,8 +1226,8 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
                     runStrokeItem.activeStrokeColor = activeStrokeColor;
                     runStrokeItem.activeFillColor = activeFillColor;
                     runStrokeItem.isLink = NO;
-                    if (imgInfoDic[kCJImageName]) {
-                        runStrokeItem.imageName = imgInfoDic[kCJImageName];
+                    if (imgInfoDic[kIDUImageName]) {
+                        runStrokeItem.imageName = imgInfoDic[kIDUImageName];
                         runStrokeItem.isImage = YES;
                     }
                     
@@ -1237,14 +1244,14 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     return allStrokePathItems;
 }
 
-- (CJGlyphRunStrokeItem *)runStrokeItemFromGlyphRun:(id)glyphRun
+- (IDUGlyphRunStrokeItem *)runStrokeItemFromGlyphRun:(id)glyphRun
                                                line:(id)line
                                             origins:(CGPoint[])origins
                                           lineIndex:(CFIndex)lineIndex
                                              inRect:(CGRect)rect
                                               width:(CGFloat)width
                                     moreThanOneLine:(BOOL)more
-                                 lineVerticalLayout:(CJCTLineVerticalLayout)lineVerticalLayout
+                                 lineVerticalLayout:(IDUCTLineVerticalLayout)lineVerticalLayout
                                             isImage:(BOOL)isImage
                              imageVerticalAlignment:(IDULabelVerticalAlignment)imageVerticalAlignment
                                         lineDescent:(CGFloat)lineDescent
@@ -1278,14 +1285,14 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 
     //转换为UIKit坐标系统
     CGRect locBounds = [self convertRectFromLoc:runBounds moreThanOneLine:more];
-    CJGlyphRunStrokeItem *runStrokeItem = [[CJGlyphRunStrokeItem alloc]init];
+    IDUGlyphRunStrokeItem *runStrokeItem = [[IDUGlyphRunStrokeItem alloc]init];
     runStrokeItem.runBounds = runBounds;
     runStrokeItem.locBounds = locBounds;
     
     return runStrokeItem;
 }
 //判断是否有需要合并的runStrokeItems
-- (NSMutableArray <CJGlyphRunStrokeItem *>*)mergeLineSameStrokePathItems:(NSArray <CJGlyphRunStrokeItem *>*)lineStrokePathItems
+- (NSMutableArray <IDUGlyphRunStrokeItem *>*)mergeLineSameStrokePathItems:(NSArray <IDUGlyphRunStrokeItem *>*)lineStrokePathItems
                                              ascentAndDescent:(CGFloat)ascentAndDescent
                                                          moreThanOneLine:(BOOL)more
 {
@@ -1295,7 +1302,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
         
         NSMutableArray *strokePathTempItems = [NSMutableArray arrayWithCapacity:3];
         for (NSInteger i = 0; i < lineStrokePathItems.count; i ++) {
-            CJGlyphRunStrokeItem *item = lineStrokePathItems[i];
+            IDUGlyphRunStrokeItem *item = lineStrokePathItems[i];
             
             //第一个item无需判断
             if (i == 0) {
@@ -1388,7 +1395,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     }
     else{
         if (lineStrokePathItems.count == 1) {
-            CJGlyphRunStrokeItem *item = lineStrokePathItems[0];
+            IDUGlyphRunStrokeItem *item = lineStrokePathItems[0];
             item = [self adjustItemHeight:item height:ascentAndDescent moreThanOneLine:more];
             [mergeLineStrokePathItems addObject:item];
         }
@@ -1397,7 +1404,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     return mergeLineStrokePathItems;
 }
 
-- (CJGlyphRunStrokeItem *)adjustItemHeight:(CJGlyphRunStrokeItem *)item
+- (IDUGlyphRunStrokeItem *)adjustItemHeight:(IDUGlyphRunStrokeItem *)item
                                     height:(CGFloat)ascentAndDescent
                            moreThanOneLine:(BOOL)more {
     // runBounds小于 ascent + Descent 时，rect扩大 1
@@ -1408,9 +1415,9 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     return item;
 }
 
-- (NSArray <CJGlyphRunStrokeItem *>*)getLinkStrokeItems:(NSArray *)strokeItems {
+- (NSArray <IDUGlyphRunStrokeItem *>*)getLinkStrokeItems:(NSArray *)strokeItems {
     NSMutableArray *linkArray = [NSMutableArray arrayWithCapacity:4];
-    for (CJGlyphRunStrokeItem *item in strokeItems) {
+    for (IDUGlyphRunStrokeItem *item in strokeItems) {
         if (item.isLink) {
             [linkArray addObject:item];
         }
@@ -1483,13 +1490,13 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     return [self linkAtPoint:point] != nil;
 }
 
-- (CJGlyphRunStrokeItem *)linkAtPoint:(CGPoint)point {
+- (IDUGlyphRunStrokeItem *)linkAtPoint:(CGPoint)point {
     
     if (!CGRectContainsPoint(CGRectInset(self.bounds, -15.f, -15.f), point) || _linkStrokeItemArray.count == 0) {
         return nil;
     }
     
-    CJGlyphRunStrokeItem *resultItem = [self clickLinkItemAtRadius:0 aroundPoint:point];
+    IDUGlyphRunStrokeItem *resultItem = [self clickLinkItemAtRadius:0 aroundPoint:point];
     
     if (!resultItem && self.extendsLinkTouchArea) {
         resultItem = [self clickLinkItemAtRadius:0 aroundPoint:point]
@@ -1500,9 +1507,9 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
     return resultItem;
 }
 
-- (CJGlyphRunStrokeItem *)clickLinkItemAtRadius:(CGFloat)radius aroundPoint:(CGPoint)point {
-    CJGlyphRunStrokeItem *resultItem = nil;
-    for (CJGlyphRunStrokeItem *item in _linkStrokeItemArray) {
+- (IDUGlyphRunStrokeItem *)clickLinkItemAtRadius:(CGFloat)radius aroundPoint:(CGPoint)point {
+    IDUGlyphRunStrokeItem *resultItem = nil;
+    for (IDUGlyphRunStrokeItem *item in _linkStrokeItemArray) {
         CGRect bounds = item.locBounds;
         
         CGFloat top = self.textInsets.top;
@@ -1521,7 +1528,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     _currentClickRunStrokeItem = nil;
-    CJGlyphRunStrokeItem *item = [self linkAtPoint:[touch locationInView:self]];
+    IDUGlyphRunStrokeItem *item = [self linkAtPoint:[touch locationInView:self]];
     if (item) {
         _currentClickRunStrokeItem = item;
         _needRedrawn = _currentClickRunStrokeItem.needRedrawn;
@@ -1557,8 +1564,8 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             if (_currentClickRunStrokeItem.linkBlock) {
                 _currentClickRunStrokeItem.linkBlock(linkModel);
             }
-            if (self.delegate && [self.delegate respondsToSelector:@selector(CJLable:didClickLink:)]) {
-                [self.delegate CJLable:self didClickLink:linkModel];
+            if (self.delegate && [self.delegate respondsToSelector:@selector(IDULable:didClickLink:)]) {
+                [self.delegate IDULable:self didClickLink:linkModel];
             }
             
             _needRedrawn = _currentClickRunStrokeItem.needRedrawn;
@@ -1608,8 +1615,8 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
                 if (_currentClickRunStrokeItem.longPressBlock) {
                     _currentClickRunStrokeItem.longPressBlock(linkModel);
                 }
-                if (self.delegate && [self.delegate respondsToSelector:@selector(CJLable:didLongPressLink:)]) {
-                    [self.delegate CJLable:self didLongPressLink:linkModel];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(IDULable:didLongPressLink:)]) {
+                    [self.delegate IDULable:self didLongPressLink:linkModel];
                 }
             }
             
@@ -1639,6 +1646,7 @@ typedef struct CJCTLineVerticalLayout CJCTLineVerticalLayout;
             break;
     }
 }
+
 
 @end
 

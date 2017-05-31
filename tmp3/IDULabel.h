@@ -21,43 +21,43 @@ typedef void (^IDULabelLinkModelBlock)(IDULabelLinkModel *linkModel);
 
 /**
  背景填充颜色。值为UIColor。默认 `nil`。
- 该属性优先级低于NSBackgroundColorAttributeName，如果设置NSBackgroundColorAttributeName会覆盖kCJBackgroundFillColorAttributeName
+ 该属性优先级低于NSBackgroundColorAttributeName，如果设置NSBackgroundColorAttributeName会覆盖kIDUBackgroundFillColorAttributeName
  */
-extern NSString * const kCJBackgroundFillColorAttributeName;
+extern NSString * const kIDUBackgroundFillColorAttributeName;
 
 /**
  背景边框线颜色。值为UIColor。默认 `nil`
  */
-extern NSString * const kCJBackgroundStrokeColorAttributeName;
+extern NSString * const kIDUBackgroundStrokeColorAttributeName;
 
 /**
  背景边框线宽度。值为NSNumber。默认 `1.0f`
  */
-extern NSString * const kCJBackgroundLineWidthAttributeName;
+extern NSString * const kIDUBackgroundLineWidthAttributeName;
 
 /**
  背景边框线圆角角度。值为NSNumber。默认 `5.0f`
  */
-extern NSString * const kCJBackgroundLineCornerRadiusAttributeName;
+extern NSString * const kIDUBackgroundLineCornerRadiusAttributeName;
 
 /**
  点击时候的背景填充颜色。值为UIColor。默认 `nil`。
- 该属性优先级低于NSBackgroundColorAttributeName，如果设置NSBackgroundColorAttributeName会覆盖kCJActiveBackgroundFillColorAttributeName
+ 该属性优先级低于NSBackgroundColorAttributeName，如果设置NSBackgroundColorAttributeName会覆盖kIDUActiveBackgroundFillColorAttributeName
  */
-extern NSString * const kCJActiveBackgroundFillColorAttributeName;
+extern NSString * const kIDUActiveBackgroundFillColorAttributeName;
 
 /**
  点击时候的背景边框线颜色。值为UIColor。默认 `nil`
  */
-extern NSString * const kCJActiveBackgroundStrokeColorAttributeName;
+extern NSString * const kIDUActiveBackgroundStrokeColorAttributeName;
 
 /**
  当text bounds小于label bounds时，文本的垂直对齐方式
  */
 typedef NS_ENUM(NSInteger, IDULabelVerticalAlignment) {
-    CJVerticalAlignmentCenter   = 0,//垂直居中
-    CJVerticalAlignmentTop      = 1,//居上
-    CJVerticalAlignmentBottom   = 2,//靠下
+    IDUVerticalAlignmentCenter   = 0,//垂直居中
+    IDUVerticalAlignmentTop      = 1,//居上
+    IDUVerticalAlignmentBottom   = 2,//靠下
 };
 
 
@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, IDULabelVerticalAlignment) {
  @param label 点击label
  @param linkModel 链点model
  */
-- (void)CJLable:(IDULabel *)label didClickLink:(IDULabelLinkModel *)linkModel;
+- (void)IDULable:(IDULabel *)label didClickLink:(IDULabelLinkModel *)linkModel;
 
 /**
  长按点击链点回调
@@ -77,7 +77,7 @@ typedef NS_ENUM(NSInteger, IDULabelVerticalAlignment) {
  @param label 点击label
  @param linkModel 链点model
  */
-- (void)CJLable:(IDULabel *)label didLongPressLink:(IDULabelLinkModel *)linkModel;
+- (void)IDULable:(IDULabel *)label didLongPressLink:(IDULabelLinkModel *)linkModel;
 @end
 
 
@@ -109,7 +109,7 @@ IB_DESIGNABLE
  *
  * IDULabel 已知bug：
  *
-   `numberOfLines`大于0且小于实际`label.numberOfLines`，同时`verticalAlignment`不等于`CJContentVerticalAlignmentTop`时，文本显示位置有偏差
+   `numberOfLines`大于0且小于实际`label.numberOfLines`，同时`verticalAlignment`不等于`IDUContentVerticalAlignmentTop`时，文本显示位置有偏差
  *
  */
 @interface IDULabel : UILabel
@@ -142,7 +142,7 @@ IB_DESIGNABLE
  */
 @property (readwrite, nonatomic, assign) UIEdgeInsets textInsets;
 /**
- * 当text rect 小于 label frame 时文本在垂直方向的对齐方式，默认 CJVerticalAlignmentCenter
+ * 当text rect 小于 label frame 时文本在垂直方向的对齐方式，默认 IDUVerticalAlignmentCenter
  */
 @property (readwrite, nonatomic, assign) IDULabelVerticalAlignment verticalAlignment;
 /**

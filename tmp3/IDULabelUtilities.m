@@ -8,20 +8,20 @@
 
 #import "IDULabelUtilities.h"
 
-NSString * const kCJImageAttributeName                       = @"kCJImageAttributeName";
-NSString * const kCJImageName                                = @"kCJImageName";
-NSString * const kCJImageHeight                              = @"kCJImageHeight";
-NSString * const kCJImageWidth                               = @"kCJImageWidth";
-NSString * const kCJImageLineVerticalAlignment               = @"kCJImageLineVerticalAlignment";
+NSString * const kIDUImageAttributeName                       = @"kIDUImageAttributeName";
+NSString * const kIDUImageName                                = @"kIDUImageName";
+NSString * const kIDUImageHeight                              = @"kIDUImageHeight";
+NSString * const kIDUImageWidth                               = @"kIDUImageWidth";
+NSString * const kIDUImageLineVerticalAlignment               = @"kIDUImageLineVerticalAlignment";
 
-NSString * const kCJLinkAttributesName                       = @"kCJLinkAttributesName";
-NSString * const kCJActiveLinkAttributesName                 = @"kCJActiveLinkAttributesName";
-NSString * const kCJIsLinkAttributesName                     = @"kCJIsLinkAttributesName";
-NSString * const kCJLinkRangeAttributesName                  = @"kCJLinkRangeAttributesName";
-NSString * const kCJLinkParameterAttributesName              = @"kCJLinkParameterAttributesName";
-NSString * const kCJClickLinkBlockAttributesName             = @"kCJClickLinkBlockAttributesName";
-NSString * const kCJLongPressBlockAttributesName             = @"kCJLongPressBlockAttributesName";
-NSString * const kCJLinkNeedRedrawnAttributesName            = @"kCJLinkNeedRedrawnAttributesName";
+NSString * const kIDULinkAttributesName                       = @"kIDULinkAttributesName";
+NSString * const kIDUActiveLinkAttributesName                 = @"kIDUActiveLinkAttributesName";
+NSString * const kIDUIsLinkAttributesName                     = @"kIDUIsLinkAttributesName";
+NSString * const kIDULinkRangeAttributesName                  = @"kIDULinkRangeAttributesName";
+NSString * const kIDULinkParameterAttributesName              = @"kIDULinkParameterAttributesName";
+NSString * const kIDUClickLinkBlockAttributesName             = @"kIDUClickLinkBlockAttributesName";
+NSString * const kIDULongPressBlockAttributesName             = @"kIDULongPressBlockAttributesName";
+NSString * const kIDULinkNeedRedrawnAttributesName            = @"kIDULinkNeedRedrawnAttributesName";
 
 //插入图片 占位符
 NSString * const kAddImagePlaceholderString                  = @" ";
@@ -32,7 +32,7 @@ void RunDelegateDeallocCallback(void * refCon) {
 
 //获取图片高度
 CGFloat RunDelegateGetAscentCallback(void * refCon) {
-    return [(NSNumber *)[(__bridge NSDictionary *)refCon objectForKey:kCJImageHeight] floatValue];
+    return [(NSNumber *)[(__bridge NSDictionary *)refCon objectForKey:kIDUImageHeight] floatValue];
 }
 
 CGFloat RunDelegateGetDescentCallback(void * refCon) {
@@ -40,7 +40,7 @@ CGFloat RunDelegateGetDescentCallback(void * refCon) {
 }
 //获取图片宽度
 CGFloat RunDelegateGetWidthCallback(void * refCon) {
-    return [(NSNumber *)[(__bridge NSDictionary *)refCon objectForKey:kCJImageWidth] floatValue];
+    return [(NSNumber *)[(__bridge NSDictionary *)refCon objectForKey:kIDUImageWidth] floatValue];
 }
 
 @implementation IDULabelUtilities
@@ -59,10 +59,10 @@ CGFloat RunDelegateGetWidthCallback(void * refCon) {
 {
     NSParameterAssert((loc <= attrStr.length) && (!IDULabelIsNull(imageName) && imageName.length != 0));
         
-    NSDictionary *imgInfoDic = @{kCJImageName:imageName,
-                                 kCJImageWidth:@(size.width),
-                                 kCJImageHeight:@(size.height),
-                                 kCJImageLineVerticalAlignment:@(verticalAlignment)};
+    NSDictionary *imgInfoDic = @{kIDUImageName:imageName,
+                                 kIDUImageWidth:@(size.width),
+                                 kIDUImageHeight:@(size.height),
+                                 kIDUImageLineVerticalAlignment:@(verticalAlignment)};
     
     //创建CTRunDelegateRef并设置回调函数
     CTRunDelegateCallbacks imageCallbacks;
@@ -79,27 +79,27 @@ CGFloat RunDelegateGetWidthCallback(void * refCon) {
     NSRange imgRange = NSMakeRange(0, imgPlaceholderStr.length);
     NSMutableAttributedString *imageAttributedString = [[NSMutableAttributedString alloc] initWithString:imgPlaceholderStr];
     [imageAttributedString addAttribute:(NSString *)kCTRunDelegateAttributeName value:(__bridge id)runDelegate range:imgRange];
-    [imageAttributedString addAttribute:kCJImageAttributeName value:imgInfoDic range:imgRange];
+    [imageAttributedString addAttribute:kIDUImageAttributeName value:imgInfoDic range:imgRange];
     
     if (!IDULabelIsNull(linkAttributes) && linkAttributes.count > 0) {
-        [imageAttributedString addAttribute:kCJLinkAttributesName value:linkAttributes range:imgRange];
+        [imageAttributedString addAttribute:kIDULinkAttributesName value:linkAttributes range:imgRange];
     }
     if (!IDULabelIsNull(activeLinkAttributes) && activeLinkAttributes.count > 0) {
-        [imageAttributedString addAttribute:kCJActiveLinkAttributesName value:activeLinkAttributes range:imgRange];
+        [imageAttributedString addAttribute:kIDUActiveLinkAttributesName value:activeLinkAttributes range:imgRange];
     }
     if (!IDULabelIsNull(parameter)) {
-        [imageAttributedString addAttribute:kCJLinkParameterAttributesName value:parameter range:imgRange];
+        [imageAttributedString addAttribute:kIDULinkParameterAttributesName value:parameter range:imgRange];
     }
     if (!IDULabelIsNull(clickLinkBlock)) {
-        [imageAttributedString addAttribute:kCJClickLinkBlockAttributesName value:clickLinkBlock range:imgRange];
+        [imageAttributedString addAttribute:kIDUClickLinkBlockAttributesName value:clickLinkBlock range:imgRange];
     }
     if (!IDULabelIsNull(longPressBlock)) {
-        [imageAttributedString addAttribute:kCJLongPressBlockAttributesName value:longPressBlock range:imgRange];
+        [imageAttributedString addAttribute:kIDULongPressBlockAttributesName value:longPressBlock range:imgRange];
     }
     if (isLink) {
-        [imageAttributedString addAttribute:kCJIsLinkAttributesName value:@(YES) range:imgRange];
+        [imageAttributedString addAttribute:kIDUIsLinkAttributesName value:@(YES) range:imgRange];
     }else{
-        [imageAttributedString addAttribute:kCJIsLinkAttributesName value:@(NO) range:imgRange];
+        [imageAttributedString addAttribute:kIDUIsLinkAttributesName value:@(NO) range:imgRange];
     }
     NSRange range = NSMakeRange(loc, imgPlaceholderStr.length);
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithAttributedString:attrStr];
@@ -144,31 +144,31 @@ CGFloat RunDelegateGetWidthCallback(void * refCon) {
     UIFont *activeLinkFont = nil;
     if (!IDULabelIsNull(linkAttributes) && linkAttributes.count > 0) {
         linkFont = linkAttributes[NSFontAttributeName];
-        [attributedString addAttribute:kCJLinkAttributesName value:linkAttributes range:range];
+        [attributedString addAttribute:kIDULinkAttributesName value:linkAttributes range:range];
     }
     if (!IDULabelIsNull(activeLinkAttributes) && activeLinkAttributes.count > 0) {
         activeLinkFont = activeLinkAttributes[NSFontAttributeName];
-        [attributedString addAttribute:kCJActiveLinkAttributesName value:activeLinkAttributes range:range];
+        [attributedString addAttribute:kIDUActiveLinkAttributesName value:activeLinkAttributes range:range];
     }
     //正常状态跟点击高亮状态下字体大小不同，标记需要重绘
     if ((linkFont && activeLinkFont) && (![linkFont.fontName isEqualToString:activeLinkFont.fontName] || linkFont.pointSize != activeLinkFont.pointSize)) {
-        [attributedString addAttribute:kCJLinkNeedRedrawnAttributesName value:@(YES) range:range];
+        [attributedString addAttribute:kIDULinkNeedRedrawnAttributesName value:@(YES) range:range];
     }else{
-        [attributedString addAttribute:kCJLinkNeedRedrawnAttributesName value:@(NO) range:range];
+        [attributedString addAttribute:kIDULinkNeedRedrawnAttributesName value:@(NO) range:range];
     }
     if (!IDULabelIsNull(parameter)) {
-        [attributedString addAttribute:kCJLinkParameterAttributesName value:parameter range:range];
+        [attributedString addAttribute:kIDULinkParameterAttributesName value:parameter range:range];
     }
     if (!IDULabelIsNull(clickLinkBlock)) {
-        [attributedString addAttribute:kCJClickLinkBlockAttributesName value:clickLinkBlock range:range];
+        [attributedString addAttribute:kIDUClickLinkBlockAttributesName value:clickLinkBlock range:range];
     }
     if (!IDULabelIsNull(longPressBlock)) {
-        [attributedString addAttribute:kCJLongPressBlockAttributesName value:longPressBlock range:range];
+        [attributedString addAttribute:kIDULongPressBlockAttributesName value:longPressBlock range:range];
     }
     if (isLink) {
-        [attributedString addAttribute:kCJIsLinkAttributesName value:@(YES) range:range];
+        [attributedString addAttribute:kIDUIsLinkAttributesName value:@(YES) range:range];
     }else{
-        [attributedString addAttribute:kCJIsLinkAttributesName value:@(NO) range:range];
+        [attributedString addAttribute:kIDUIsLinkAttributesName value:@(NO) range:range];
     }
     return attributedString;
 }
@@ -263,10 +263,10 @@ CGFloat RunDelegateGetWidthCallback(void * refCon) {
 
 
 
-@implementation CJGlyphRunStrokeItem
+@implementation IDUGlyphRunStrokeItem
 
 - (id)copyWithZone:(NSZone *)zone {
-    CJGlyphRunStrokeItem *item = [[[self class] allocWithZone:zone] init];
+    IDUGlyphRunStrokeItem *item = [[[self class] allocWithZone:zone] init];
     item.strokeColor = [self.strokeColor copyWithZone:zone];
     item.fillColor = self.fillColor;
     item.lineWidth = self.lineWidth;
